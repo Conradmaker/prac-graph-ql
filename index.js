@@ -20,6 +20,8 @@ type Query{
 }
 type Mutation{
     addProduct(input:ProductInput):Product
+    updateProduct(id:ID!,input:ProductInput!):Product
+    deleteProduct(id:ID!):String
 }
 `);
 
@@ -50,6 +52,19 @@ const root = {
     products.push(input);
     return root.getProduct({id: input.id});
   },
+  updateProduct: ({id, input}) => {
+    const index = products.findIndex((product) => product.id === parseInt(id));
+    products[index] = {
+      id: parseInt(id),
+      ...input,
+    };
+    return products[index];
+  },
+  deleteProduct: ({id}) => {
+    const index = products.findIndex((product) => product.id === id);
+    products.splice(index, 1);
+    return "remove success";
+  },
 };
 
 //express서버 생성
@@ -64,6 +79,8 @@ app.use(
     graphiql: true, //gui를 제공해준다.
   })
 );
+
+app.use("/static", express.static("static"));
 
 app.listen(4000, () => {
   console.log("서버는 4000번포트 구동중");
