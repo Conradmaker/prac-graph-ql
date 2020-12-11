@@ -61,7 +61,7 @@ const root = {
     return products[index];
   },
   deleteProduct: ({id}) => {
-    const index = products.findIndex((product) => product.id === id);
+    const index = products.findIndex((product) => product.id === parseInt(id));
     products.splice(index, 1);
     return "remove success";
   },
